@@ -1,4 +1,4 @@
-name = "cf-emby-proxy-ui" # Worker 的项目名称
+name = "fd3" # Worker 的项目名称
 main = "worker.js" # Worker 的主入口文件
 compatibility_date = "2026-03-13" # 兼容性日期，用于指定使用的 Cloudflare 运行时版本
 
