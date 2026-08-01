@@ -2,6 +2,15 @@ name = "fd3" # Worker 的项目名称
 main = "worker.js" # Worker 的主入口文件
 compatibility_date = "2026-03-13" # 兼容性日期，用于指定使用的 Cloudflare 运行时版本
 compatibility_flags = ["enable_request_signal"] # 开启 Request.signal 客户端断开感知
+workers_dev = false
+preview_urls = false
+keep_vars = true
+routes = [
+  { pattern = "545352.bond/*", zone_name = "545352.bond" },
+  { pattern = "*.545352.bond/*", zone_name = "545352.bond" },
+  { pattern = "041219.cyou/*", zone_name = "041219.cyou" },
+  { pattern = "*.041219.cyou/*", zone_name = "041219.cyou" },
+]
 
 [build]
 command = "npm run build:worker"
