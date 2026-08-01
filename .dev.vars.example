@@ -1,0 +1,3 @@
+# Required for local authentication. Replace both values before starting Wrangler.
+JWT_SECRET=replace-with-a-long-random-secret
+ADMIN_PASS=replace-with-a-local-admin-password

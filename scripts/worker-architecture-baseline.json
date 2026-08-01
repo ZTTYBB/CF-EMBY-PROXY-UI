@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "description": "Pre-Facade production ESM import graph captured by the repository architecture checker before the single-kernel migration.",
+  "source": "Historical worker/ production graph report retained for before/after comparison; it is not used as a current expected value.",
+  "productionGraph": {
+    "modules": 144,
+    "importEdges": 873
+  }
+}

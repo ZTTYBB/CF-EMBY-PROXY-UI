@@ -1,0 +1,27 @@
+{
+  "name": "cf-emby-proxy-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "build:worker": "node ./scripts/build-worker.mjs",
+    "check:worker-syntax": "node ./scripts/check-worker-syntax.mjs",
+    "check:worker-architecture": "node ./scripts/check-worker-architecture.mjs",
+    "check:worker-bundle": "node ./scripts/check-worker-bundle.mjs",
+    "build:frontend": "npm run build --workspace frontend",
+    "build:release": "npm run build:worker && npm run build:cdn --workspace frontend",
+    "check": "node ./scripts/check-project.mjs"
+  },
+  "devDependencies": {
+    "acorn": "^8.15.0",
+    "acorn-walk": "^8.3.5",
+    "vite": "^8.1.5",
+    "wrangler": "^4.0.0"
+  }
+}

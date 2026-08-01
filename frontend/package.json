@@ -1,0 +1,31 @@
+{
+  "name": "cf-emby-proxy-ui-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "sync:admin-runtime": "node ./scripts/sync-admin-runtime.mjs",
+    "check:admin-runtime": "node ./scripts/sync-admin-runtime.mjs --check",
+    "dev": "node ./scripts/sync-admin-runtime.mjs && node ./scripts/dev-server.mjs",
+    "dev:vite": "node ./scripts/sync-admin-runtime.mjs && vite --host 0.0.0.0 --port 5173",
+    "build": "node ./scripts/sync-admin-runtime.mjs && vite build",
+    "build:bundle": "node ./scripts/sync-admin-runtime.mjs && vite build",
+    "build:cdn": "node ./scripts/sync-admin-runtime.mjs && vite build && node ./scripts/check-cdn-paths.mjs",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "check:cdn": "node ./scripts/check-cdn-paths.mjs"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "lucide-vue-next": "^1.0.0",
+    "vue": "^3.5.32"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.1.5"
+  }
+}

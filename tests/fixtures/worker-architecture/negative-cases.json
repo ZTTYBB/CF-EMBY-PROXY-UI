@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 2,
+  "validCases": [
+    {
+      "name": "small-cohesive-module",
+      "files": {
+        "runtime/small.js": "export function useful() { return 1; }"
+      }
+    },
+    {
+      "name": "single-production-caller",
+      "files": {
+        "runtime/caller.js": "import { useful } from './single.js';\nexport function call() { return useful() + 1; }",
+        "runtime/single.js": "export function useful() { return 1; }"
+      }
+    },
+    {
+      "name": "playback-may-use-http",
+      "files": {
+        "runtime/proxy/http/media.js": "export function mediaType() { return 'application/json'; }",
+        "runtime/proxy/playback/contract.js": "import { mediaType } from '../http/media.js';\nexport function inspect() { return { type: mediaType() }; }"
+      }
+    }
+  ],
+  "invalidCases": [
+    {
+      "name": "technical-forwarder",
+      "expectedCodes": ["FORWARDING_MODULE"],
+      "files": {
+        "runtime/forwarder.js": "export function forward(request) { return target(request); }"
+      }
+    },
+    {
+      "name": "oversized-new-module",
+      "expectedCodes": ["MODULE_TOO_LARGE"],
+      "files": {
+        "runtime/oversized.js": {
+          "source": "export function useful() { return 1; }",
+          "padLines": 1501
+        }
+      }
+    },
+    {
+      "name": "http-to-playback-dependency",
+      "expectedCodes": ["CROSS_SLICE_DEPENDENCY"],
+      "files": {
+        "runtime/proxy/http/guard.js": "import { inspect } from '../playback/contract.js';\nexport function guard(value) { return inspect(value); }",
+        "runtime/proxy/playback/contract.js": "export function inspect(value) { return value; }"
+      }
+    },
+    {
+      "name": "playback-to-platform-dependency",
+      "expectedCodes": ["CROSS_SLICE_DEPENDENCY"],
+      "files": {
+        "platform/clock.js": "export function now() { return Date.now(); }",
+        "runtime/proxy/playback/cache.js": "import { now } from '../../../platform/clock.js';\nexport function expiresAt(ttl) { return now() + ttl; }"
+      }
+    },
+    {
+      "name": "import-cycle",
+      "expectedCodes": ["CYCLE"],
+      "files": {
+        "runtime/a.js": "import './b.js';\nexport const a = 1;",
+        "runtime/b.js": "import './a.js';\nexport const b = 1;"
+      }
+    },
+    {
+      "name": "reverse-layer-dependency",
+      "expectedCodes": ["REVERSE_DEPENDENCY"],
+      "files": {
+        "core/shared.js": "import '../runtime/use-case.js';\nexport const shared = 1;",
+        "runtime/use-case.js": "export const useCase = 1;"
+      }
+    },
+    {
+      "name": "production-testing-dependency",
+      "expectedCodes": ["TESTING_DEPENDENCY"],
+      "files": {
+        "runtime/use-case.js": "import { fixture } from '../testing/helper.js';\nexport function useFixture() { return fixture + 1; }",
+        "testing/helper.js": "export const fixture = 1;"
+      }
+    },
+    {
+      "name": "legacy-operation-reference",
+      "expectedCodes": ["LEGACY_REFERENCE"],
+      "files": {
+        "runtime/legacy.js": "const dataService = {};\nexport { dataService };"
+      }
+    },
+    {
+      "name": "fake-facades",
+      "expectedCodes": ["FACADE_FORWARDING", "FACADE_AUTH", "FACADE_WAIT_UNTIL"],
+      "files": {
+        "runtime/application-facades.js": "const dependency = { handle() {} };\nvar AdminConsoleFacade = class { constructor({ service }) { this.service = service; } handle(request, env, ctx) { return this.service.handle(request, env, ctx); } };\nvar NodeProxyFacade = class { constructor({ service }) { this.service = service; } handle(request, env, ctx, routeContext) { return this.service.handle(request, env, ctx, routeContext); } };\nvar ScheduledMaintenanceFacade = class { constructor({ service }) { this.service = service; } handle(event, env, ctx) { return this.service.handle(event, env, ctx); } };\nexport { AdminConsoleFacade, NodeProxyFacade, ScheduledMaintenanceFacade };"
+      }
+    }
+  ]
+}
